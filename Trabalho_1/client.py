@@ -16,4 +16,7 @@ ADDR = (HOST, PORT)
 
 client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client.connect(ADDR)
-client.sendall('Ola')
+client.sendall(str.encode('Ola'))
+data = client.recv(1024)
+
+print('mensagem ecoada: ', data.decode())
