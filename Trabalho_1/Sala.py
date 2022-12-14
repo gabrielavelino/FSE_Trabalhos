@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 
 
-
 class Sala():
     def __init__(self,sensor_presenca, 
     sensor_fumaca, 
@@ -21,7 +20,8 @@ class Sala():
     estado_sensor_porta = 0,
     estado_sensor_contagem_pessoas_entrada = 0,
     estado_sensor_contagem_pessoas_saida = 0,
-    estado_sensor_temp = 0):
+    estado_sensor_temp = 0,
+    estadoAlarmeSala = 0):
 
         self.sensor_presenca = sensor_presenca
         self.sensor_fumaca = sensor_fumaca
@@ -42,23 +42,46 @@ class Sala():
         self.estado_sensor_contagem_pessoas_entrada = estado_sensor_contagem_pessoas_entrada
         self.estado_sensor_contagem_pessoas_saida = estado_sensor_contagem_pessoas_saida
         self.estado_sensor_temp = estado_sensor_temp
+        self.estadoAlarmeSala = estadoAlarmeSala
     
 
-    
+    # GETTERS AND SETTERS
     def setEstadoSensorFumaca(self, estado):
         self.estado_sensor_fumaca = estado
     
     def getEstadoSensorFumaca(self):
         return self.estado_sensor_fumaca
+
+    def setEstadoSensorJanela(self, estado):
+        self.estado_sensor_janela = estado
     
-    def getTemperatura():
+    def getEstadoSensorJanela(self):
+        return self.estado_sensor_janela
+    
+    def setEstadoSensorPorta(self, estado):
+        self.estado_sensor_porta = estado
+    
+    def getEstadoSensorPorta(self):
+        return self.estado_sensor_porta
+
+    def setEstadoSensorPresenca(self, estado):
+        self.estado_sensor_presenca = estado
+    
+    def getEstadoSensorPresenca(self):
+        return self.estado_sensor_presenca
+    
+    def setEstadoAlarmeSala(self, estado):
+        self.estadoAlarmeSala = estado
+    
+    def getEstadoAlarmeSala(self):
+        return self.estadoAlarmeSala
+        
+    
+    def getEstadoTemperatura():
         pass
     
-    def pegaEstado(self,estado):
-        if (estado == 1):
-            print('esta ligado')
-        else:
-            print('esta desligado')
+    def setEstadoTemperatura():
+        pass
     
     def manipulaLed(self,num,pos):
         # sala_1 = ConfigJson('configuracao_sala1.json')
@@ -66,34 +89,96 @@ class Sala():
         # print(sala_1.json['outputs'])
 
         # 18 - lampada-1, 23 - lampada-2, 24 - ar_condicionado, 25_Alarme
-        led = [18,23,24,25]
-
-
+        led = [18,23,24,25,8]
         if(num==1): 
             GPIO.output(led[pos], GPIO.HIGH)
         else:
             GPIO.output(led[pos], GPIO.LOW)
+    
+    
+    def temperatura(self,dhtDevice):
+        
+        for i in range (4):
+            try:
+                # Print the values to the serial port
+                temperature_c = dhtDevice.temperature
 
+                humidity = dhtDevice.humidity
+                print(f"Temp: {temperature_c} C    Humidity: {humidity}% ")
+
+            except RuntimeError as error:
+                # Errors happen fairly often, DHT's are hard to read, just keep going
+                print(error.args[0])
+                pass
+
+    # def sensorAlarme(self):
+    #     alarme = [8]
+    #     if (self.estado_sensor_fumaca == 1):
+    #         GPIO.output(alarme, GPIO.HIGH)
+    #         print('ALARME DISPARADO')
+    #     else:
+    #         GPIO.output(alarme, GPIO.LOW)
+    
+    def alarmeSala(self):
+        if (self.getEstadoAlarmeSala() == 0):
+            print('Sensor Alarme da sala desligado')
+        else:
+            print('Sensor Alarme da sala ligado')
+            if(self.getEstadoSensorPresenca() == 1 or self.getEstadoSensorJanela() == 1 or self.getEstadoSensorPorta() == 1):
+                print('Detectado invasão na sala')
+                self.sensorAlarme()
+    
+    # SENSORES
     def sensorAlarme(self):
         alarme = [8]
-        if (self.estado_sensor_fumaca == 1):
+        if (self.estado_sensor_fumaca == 1 or self.estado_sensor_porta == 1 or self.estado_sensor_janela == 1 or self.estado_sensor_presenca == 1):
             GPIO.output(alarme, GPIO.HIGH)
             print('ALARME DISPARADO')
         else:
             GPIO.output(alarme, GPIO.LOW)
-        
+    
     def sensorFumaca(self,GPIO_IN):
         
-        print('\n' + str(self.getEstadoSensorFumaca()))
+        # print('\n' + str(self.getEstadoSensorFumaca()))
         if self.getEstadoSensorFumaca() == 0:
             self.setEstadoSensorFumaca(1)
-            print('\n' + str(self.getEstadoSensorFumaca()))
+            # print('\n' + str(self.getEstadoSensorFumaca()))
             print('\nsensor de fumaça ativado')
             self.sensorAlarme()
         else:
             self.setEstadoSensorFumaca(0)
             self.sensorAlarme()
             print('\nsensor de fumaça foi desativado')
+    
+    def sensorJanela(self,GPIO_IN):
+        
+        if self.getEstadoSensorJanela() == 0:
+            self.setEstadoSensorJanela(1)
 
-    def manipulaSensores(self):
-        GPIO.add_event_detect(self.sensor_fumaca, GPIO.BOTH, callback=self.sensorFumaca,bouncetime = 300)
+            print('\nsensor da Janela ativado')
+            
+        else:
+            self.setEstadoSensorJanela(0)
+            print('\nsensor de Janela foi desativado')
+    
+    def sensorPorta(self,GPIO_IN):
+        
+        if self.getEstadoSensorPorta() == 0:
+            self.setEstadoSensorPorta(1)
+            # print('\n' + str(self.getEstadoSensorPorta()))
+            print('\nsensor da Porta ativado')
+        else:
+            self.setEstadoSensorPorta(0)
+            print('\nsensor de Porta foi desativado')
+    
+    def sensorPresenca(self,GPIO_IN):
+        
+        if self.getEstadoSensorPresenca() == 0:
+            self.setEstadoSensorPresenca(1)
+            # print('\n' + str(self.getEstadoSensorPresenca()))
+            print('\nsensor da Presenca ativado')
+        else:
+            self.setEstadoSensorPresenca(0)
+            print('\nsensor de Presenca foi desativado')
+
+    
