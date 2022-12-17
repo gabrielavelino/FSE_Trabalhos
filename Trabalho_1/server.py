@@ -2,11 +2,12 @@ import socket
 import threading
 import sys
 import os
+from time import sleep
 
 HEADER = 128
-PORT = 10211
+PORT = 10471
 # SERVER = sys.argv[-1]
-HOST = 'localhost'
+HOST = sys.argv[-1]
 # SERVER = "192.168.1.129"            ## 43
 # SERVER = "192.168.1.146"            ## 44
 # ADDR = (SERVER, PORT)
@@ -26,11 +27,14 @@ conn, ender = server.accept()
 
 print("Conectado em", ender)
 
+
 while True:
     data = conn.recv(1024)
     if not data:
-        print("Fechando conexão...")
-        conn.close()
-        break
+        print("Recebi nada")
+        sleep(2)
+        # conn.close()
+        # break
     else:
         conn.sendall(data)
+        print(data.decode())
