@@ -8,22 +8,17 @@ from client import cliente
 
 ## SERVIDOR DISTRIBUIDO ###
 HEADER = 128
-PORT = 10471
+PORT = 10472
 HOST = sys.argv[-1]
-# SERVER = sys.argv[-1]
-# SERVER = "192.168.1.129"            ## 43
-# SERVER = "192.168.1.146"            ## 44
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
-# ADDR = (SERVER, PORT)
 ADDR = (HOST, PORT)
 
-# from variaveis import sala1
-# import GPIOZERO as LED
 
 # INICIALIZA SALA
 client1 = cliente(HEADER,PORT,HOST,ADDR)
-conexao = client1.iniciaConexao() 
+conexao = client1.iniciaConexao()
+
 sala1 = Sala(7, 1, 12, 16, 20, 21, 26)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -45,7 +40,7 @@ def menu():
     print('5 - Ligar alarme (somente quando não tem ninguém na sala!)')
 
     opcao = int(input('Digite sua opcao: '))
-
+    client1.recebeDados(conexao,FORMAT,sala1,GPIO)
     if(opcao == 1):
             # sala1.manipulaLed(1,2)
             # sleep(1)
@@ -85,21 +80,22 @@ def menu():
         print(f'Estado lampada 2: {sala1.getEstadoLampada2()}\n')
         print(f'Estado projetor: {sala1.getEstadoProjetor()}\n')
         print(f'Estado ar condicionado: {sala1.getEstadoArCondicionado()}\n')
-        print('Estado sensor fumaça: ' + str(sala1.getEstadoSensorFumaca()) + '\n')
-        print('Estado sensor presença: ' + str(sala1.getEstadoSensorPresenca()) + '\n')
-        print('Estado sensor porta: ' + str(sala1.getEstadoSensorPorta()) + '\n')
-        print('Estado sensor janela: ' + str(sala1.getEstadoSensorJanela()) + '\n')
-        print('Estado alarme sala: ',sala1.getEstadoAlarmeSala())
+        print(f'Estado sensor fumaça: {sala1.getEstadoSensorFumaca()}\n')
+        print(f'Estado sensor presença: {sala1.getEstadoSensorPresenca()}\n')
+        print(f'Estado sensor porta: {sala1.getEstadoSensorPorta()}\n')
+        print(f'Estado sensor janela: {sala1.getEstadoSensorJanela()}\n')
+        print(f'Estado alarme sala: {sala1.getEstadoAlarmeSala()}')
+
         # ENVIA PRO SERVIDOR
-        client1.send(f'Estado lampada 1: {sala1.getEstadoLampada1()}\n',conexao)
-        client1.send(f'Estado lampada 2: {sala1.getEstadoLampada2()}\n',conexao)
-        client1.send(f'Estado projetor: {sala1.getEstadoProjetor()}\n',conexao)
-        client1.send(f'Estado ar condicionado: {sala1.getEstadoArCondicionado()}\n',conexao)
-        client1.send(f'Estado sensor fumaça: {sala1.getEstadoSensorFumaca()}\n',conexao)
-        client1.send(f'Estado sensor presença: {sala1.getEstadoSensorPresenca()}\n',conexao)
-        client1.send(f'Estado sensor porta: {sala1.getEstadoSensorPorta()}\n',conexao)
-        client1.send(f'Estado sensor janela: {sala1.getEstadoSensorJanela()}\n',conexao)
-        client1.send(f'Estado alarme da sala: {sala1.getEstadoAlarmeSala()}\n',conexao)
+        # client1.enviaDados(f'Estado lampada 1: {sala1.getEstadoLampada1()}\n',conexao)
+        # client1.enviaDados(f'Estado lampada 2: {sala1.getEstadoLampada2()}\n',conexao)
+        # client1.enviaDados(f'Estado projetor: {sala1.getEstadoProjetor()}\n',conexao)
+        # client1.enviaDados(f'Estado ar condicionado: {sala1.getEstadoArCondicionado()}\n',conexao)
+        # client1.enviaDados(f'Estado sensor fumaça: {sala1.getEstadoSensorFumaca()}\n',conexao)
+        # client1.enviaDados(f'Estado sensor presença: {sala1.getEstadoSensorPresenca()}\n',conexao)
+        # client1.enviaDados(f'Estado sensor porta: {sala1.getEstadoSensorPorta()}\n',conexao)
+        # client1.enviaDados(f'Estado sensor janela: {sala1.getEstadoSensorJanela()}\n',conexao)
+        # client1.enviaDados(f'Estado alarme da sala: {sala1.getEstadoAlarmeSala()}\n',conexao)
         
         
     elif(opcao == 4):
