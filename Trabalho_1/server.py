@@ -45,6 +45,4 @@ while True:
         print("Recebi nada")
         conn.close()
         break
-    # elif:
-    #     conn.sendall(data)
-    #     print(data.decode())
+    

@@ -3,16 +3,6 @@ from time import sleep
 import sys
 import threading
 
-# HEADER = 128
-# PORT = 10471
-# HOST = sys.argv[-1]
-# # SERVER = sys.argv[-1]
-# # SERVER = "192.168.1.129"            ## 43
-# # SERVER = "192.168.1.146"            ## 44
-# FORMAT = 'utf-8'
-# DISCONNECT_MESSAGE = "!DISCONNECT"
-# # ADDR = (SERVER, PORT)
-# ADDR = (HOST, PORT)
 class cliente():
     def __init__(self,HEADER,PORT,HOST,ADDR):
         self.HEADER = HEADER
@@ -51,7 +41,6 @@ class cliente():
     def recebeDados(self,conexao,FORMAT,sala,GPIO):
         msg = (conexao.recv(2048).decode(FORMAT))
         print(f"msg: {msg}")
-        
         if msg == '1':
             msn = self.organizaDados(sala)
             conexao.sendall(str.encode(msn))

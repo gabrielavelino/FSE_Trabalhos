@@ -149,7 +149,6 @@ class Sala():
         
         for i in range (1):
             try:
-                # Print the values to the serial port
                 temperature_c = dhtDevice.temperature
 
                 humidity = dhtDevice.humidity
@@ -158,18 +157,9 @@ class Sala():
                 # time.sleep(2)
 
             except RuntimeError as error:
-                # Errors happen fairly often, DHT's are hard to read, just keep going
                 print(error.args[0])
                 pass
 
-    # def sensorAlarme(self):
-    #     alarme = [8]
-    #     if (self.estado_sensor_fumaca == 1):
-    #         GPIO.output(alarme, GPIO.HIGH)
-    #         print('ALARME DISPARADO')
-    #     else:
-    #         GPIO.output(alarme, GPIO.LOW)
-    
     def alarmeSala(self):
         if (self.getEstadoAlarmeSala() == 0):
             print('\n----- Sensor Alarme da sala desligado ----\n')
@@ -190,10 +180,9 @@ class Sala():
     
     def sensorFumaca(self,GPIO_IN):
         
-        # print('\n' + str(self.getEstadoSensorFumaca()))
         if self.getEstadoSensorFumaca() == 0:
             self.setEstadoSensorFumaca(1)
-            # print('\n' + str(self.getEstadoSensorFumaca()))
+            
             print('\nsensor de fumaça ativado')
             self.sensorAlarme()
         else:
@@ -216,7 +205,6 @@ class Sala():
         
         if self.getEstadoSensorPorta() == 0:
             self.setEstadoSensorPorta(1)
-            # print('\n' + str(self.getEstadoSensorPorta()))
             print('\nsensor da Porta ativado')
         else:
             self.setEstadoSensorPorta(0)
@@ -226,7 +214,6 @@ class Sala():
         
         if self.getEstadoSensorPresenca() == 0:
             self.setEstadoSensorPresenca(1)
-            # print('\n' + str(self.getEstadoSensorPresenca()))
             print('\nsensor da Presenca ativado')
         else:
             self.setEstadoSensorPresenca(0)

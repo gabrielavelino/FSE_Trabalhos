@@ -1,24 +1,93 @@
 # FSE_Trabalhos
 
-## Critérios de Avaliação
+## Aluno
+|Matrícula | Aluno |
+| -- | -- |
+| 18/0100831  |  Gabriel Avelino Freire |
 
-A avaliação será realizada seguindo os seguintes critérios:
+## Sobre 
+O objetivo desse trabalho é criar um sistema distribuído para automação de salas controlando sensores e dispositivos e monitorando em tempo real. O sistema deve ser desenvolvido para funcionar em um conjunto de placas Raspberry Pi com um servidor central responsável pelo controle e interface com o usuário e servidores distribuídos para leitura e acionamento dos dispositivos. Dentre os dispositivos envolvidos estão o monitoramento de temperatura e umidade, sensores de presença, sensores de fumaça, sensores de contagem de pessoas, sensores de abertura e fechamento de portas e janelas, acionamento de lâmpadas, aparelhos de ar-condicionado, alarme e aspersores de água em caso de incêndio.
 
-|   ITEM    |   DETALHE  |   VALOR   |
-|-----------|------------|:---------:|
-|**Servidor Central**    |       |       |
-|**Interface (Monitoramento)**  |   Interface gráfica (via terminal, web, etc) apresentando o estado de cada dispositivo (entradas e saídas), a temperatura, umidade e o número de pessoas ocupando o prédio sendo atualizada periodicamente.  |   1,0   |
-|**Interface (Acionamento de Dispositivos)** |   Mecanismo para acionamento de lâmpadas, aparelhos de ar-condicionado e projetores individualmente ou em grupos. |   1,0   |
-|**Acionamento do Alarme**   |   Mecanismo de ligar/desligar alarme e acionamento do alarme de acordo com o estado dos sensores com alerta no acionamento. |   0,5   |
-|**Alarme de Incêndio**   |   Implementação da rotina de acionamento do alarme de incêncio. |   0,5   |
-|**Log (CSV)**   |   Geração de Log em arquivo CSV.  |   0,5 |
-|**Servidores Distribuídos**    |       |       |
-|**Inicialização (Arquivo de Configuração)**    |   Correta inicialização do serviço à partir do arquivo de configuração JSON.  |   5   |
-|**Leitura de Temperatura / Umidade**    |   Leitura, armazenamento e envio dos valores de temperatura / umidade por sala.  |   1   |
-|**Acionamento de Dispositivos** |   Correto acionamento de lâmpadas, aparelhos de ar-condicionado e aspersor pelo comando do Servidor Central.    |   2   |
-|**Estado dos Sensores** |   Correta leitura e envio (*mensagem push*) para o Servidor Central um alerta pelo acionamento dos sensores de presença / abertura de portas/janelas e sensor de fumaça.   |   3  |
-|**Contagem de pessoas** |   Correta leitura dos sensores de contagem de pessoas (Por andar e Total).   |   4  |
-|**Geral**    |       |       |
-|**Comunicação TCP/IP**  |   Correta implementação de comunicação entre os servidores usando o protocolo TCP/IP, incluindo as mensagens do tipo *push*. |   1,5   |
-|**Qualidade do Código / Execução** |   Utilização de boas práticas como o uso de bons nomes, modularização e organização em geral, bom desempenho da aplicação sem muito uso da CPU. |  1,5 |
-|**Pontuação Extra** |   Qualidade e usabilidade acima da média. |   0,5   |
+## Componentes do Sistema
+Para simplificar a implementação e logística de testes do trabalho, a quantidade de salas do prédio e o número de sensores foi reduzido a um mínimo representativo. Estarão disponíveis para teste 4 placas Raspberry Pi para executar os Servidores Distribuídos e o Servidor Central. A configuração do sistema está detalhada abaixo:
+O sistema do Servidor Central será composto por:
+
+- 01 placa Raspberry Pi 4;
+
+O sistema do Servidor Distribuído será composto por:
+
+- 01 Placa Raspberry Pi 4;
+- 01 Sensore de Temperatura (DHT22)
+- 01 Circuito de potência com 5 relés para acionametno de Lâmpadas / Aparelhos de Ar-Condicionado, etc.;
+- 02 Sensores de fechamento de portas/janelas;
+- 01 Sensore de presença;
+- 01 Sensore de fumaça;
+- 02 Sensores de Contagem de Pessoas (Cada pessoa que passa aciona o sinal do sensor por aprox. 200 ms, são 2 sensores por sala);
+- 01 Alarme (Buzzer).
+
+**Linguagem**: 
+- python (versão 3)<br>
+
+**Bibliotecas**: 
+- socket
+- RPi.GPIO
+- threading
+- time
+- AdaFruit <br>
+
+## Arquiterura de arquivos
+O trabalho se encontra na pasta Trabalho_1, onde possui os arquivos para rodar o programa com conexão TC/IP, segue os arquivos: 
+
+### Servidor Central
+**server.py**: Responsável pelo servidor central, onde recebe e envia dados para o servidor distribuído para controlar os elementos dessa sala.
+
+### Servidor Distribuído
+**Sala.py**: Serve como uma classe Sala, onde passa os parâmetros da sala como leds e sensores e suas respectivas funções para manipulação de estado.
+
+**config.py**: Esse arquivo serve para fazer o parser do JSON da configuração da sala.
+
+**server.py**: Responsável pelo servidor distribuído, é uma classe onde envia e recebe dados do servidor central, criando um cliente para comunicação com o servidor central.
+
+**Main.py**: Arquivo principal, onde possui a lógica principal do projeto, onde o usuário controla todos os eletrônicos e sensores daquela sala.
+
+## Como rodar o programa 
+A seguir tem os passos para rodar o programa:
+
+```sh
+Clonar o repositório:  
+git clone https://github.com/gabrielavelino/FSE_Trabalhos.git
+```
+
+```sh
+Mudar para a pasta:
+cd .\FSE_TRABALHOS\Trabalho_1\
+```
+
+```
+Enviar para a Rasp:
+scp -P 13508 -r Trabalho_1 <user_>@<000.00.00.00>:~
+```
+
+```
+exemplo:
+scp -P 13508 -r Trabalho_1 gabrielavelino@164.41.98.16:~
+```
+
+```
+Dentro da Rasp:
+cd Trabalho_1
+```
+
+```
+Dentro da Rasp em 1 terminal:
+python3 server.py 164.41.98.16(endereço da placa)
+```
+
+```
+Dentro da Rasp em outro terminal:
+python3 Main.py 164.41.98.16(endereço da placa)
+```
+
+## Informações adicionais
+
+Não foi implementado o sensor de contagem de pessoas, o arquivo log dos comandos do usuário, inicializar a sala com JSON e alguns problemas de lógica com o alarme.

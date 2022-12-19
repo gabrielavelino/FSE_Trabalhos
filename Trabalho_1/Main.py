@@ -42,9 +42,6 @@ def menu():
     opcao = int(input('Digite sua opcao: '))
     client1.recebeDados(conexao,FORMAT,sala1,GPIO)
     if(opcao == 1):
-            # sala1.manipulaLed(1,2)
-            # sleep(1)
-            # sala1.manipulaLed(0,2)
             
             while True:
                 print('\n\n----------- Lista de comandos -------------\n')
@@ -55,8 +52,8 @@ def menu():
                 print('Alarme: digite 4\n')
                 escolheLed = int(input('Digite qual LED quer acender: '))
                 sala1.manipulaLed(1,escolheLed)
-                sair = str(input('Deseja sair? [y,n]: '))
-                if (sair == 'y'):
+                sair = str(input('Deseja sair? [s,n]: '))
+                if (sair == 's'):
                     break
                 else:
                     continue
@@ -69,8 +66,8 @@ def menu():
             print('Projetor multimídia: digite 3\n')
             escolheLed = int(input('Digite qual LED quer apagar: '))
             sala1.manipulaLed(0,escolheLed)
-            sair = str(input('Deseja sair? [y,n]: '))
-            if (sair == 'y'):
+            sair = str(input('Deseja sair? [s,n]: '))
+            if (sair == 's'):
                 break
             else:
                 continue
@@ -105,7 +102,8 @@ def menu():
         elif(sala1.getEstadoAlarmeSala() == 1):
             sala1.setEstadoAlarmeSala(0)
             print('Estado alarme sala: ',sala1.getEstadoAlarmeSala())
-
+    
+    else: print('Opção inválida!')
 
 def main():
     while(1):
