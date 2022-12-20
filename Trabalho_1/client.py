@@ -13,7 +13,8 @@ class cliente():
     def iniciaConexao(self):
         CLIENTE = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         CLIENTE.connect(self.ADDR)
-        CLIENTE.sendall(str.encode('Ola eu estou conectado...'))
+        CLIENTE.settimeout(1)
+        # CLIENTE.sendall(str.encode('Ola eu estou conectado...'))
         return CLIENTE
 
     def ligaTodosLed(self,sala):
@@ -39,17 +40,21 @@ class cliente():
 
     
     def recebeDados(self,conexao,FORMAT,sala,GPIO):
-        msg = (conexao.recv(2048).decode(FORMAT))
-        print(f"msg: {msg}")
-        if msg == '1':
-            msn = self.organizaDados(sala)
-            conexao.sendall(str.encode(msn))
-        elif msg == '2':
-            self.ligaTodosLed(sala)
-            conexao.sendall(str.encode('Ligou todos os leds Sala 1'))
-        elif msg == '3':
-            self.desligaTodosLed(sala)
-            conexao.sendall(str.encode('Desligou todos os leds Sala 1'))
+        while True:
+            try:
+                msg = (conexao.recv(2048).decode(FORMAT))
+                print(f"msg: {msg}")
+                if msg == '1':
+                    msn = self.organizaDados(sala)
+                    conexao.sendall(str.encode(msn))
+                elif msg == '2':
+                    self.ligaTodosLed(sala)
+                    conexao.sendall(str.encode('Ligou todos os leds Sala 1'))
+                elif msg == '3':
+                    self.desligaTodosLed(sala)
+                    conexao.sendall(str.encode('Desligou todos os leds Sala 1'))
+            except:
+                break
         
     def enviaDados(self,msg,conexao):
         message = msg.encode()

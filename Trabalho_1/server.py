@@ -20,21 +20,28 @@ server.listen()
 print('Esperando a conexão do cliente...')
 
 conn, ender = server.accept()
-
+connSala2, ender = server.accept()
+server.settimeout(2)
 print("Conectado em", ender)
 
-data = conn.recv(1024)
-print(data.decode())
+# data = conn.recv(1024)
+# print(data.decode())
 
 while True:
     print('\n######### SERVIDOR CENTRAL ##########')
     print('1 - Estados sensores\n')
     print('2 - Ligar Lampadas/Ar condicionado/Projetor\n')
     print('3 - Desligar Lampadas/Ar condicionado/Projetor\n')
+    print('4 - Encerrar conexão\n')
     opcao = int(input('Digite sua opção: '))
     if (opcao == 1):
+        
         conn.sendall(str.encode('1'))
-        print(conn.recv(1024).decode())
+        try:
+            print(conn.recv(1024).decode())
+        except socket.timeout:
+            print('Nao foi dessa vez')
+            continue
     elif (opcao == 2):
         conn.sendall(str.encode('2'))
         print(conn.recv(1024).decode())
@@ -42,7 +49,7 @@ while True:
         conn.sendall(str.encode('3'))
         print(conn.recv(1024).decode())
     elif (opcao == 4):
-        print("Recebi nada")
+        print("Fechando conexão!")
         conn.close()
         break
     

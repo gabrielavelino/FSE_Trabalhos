@@ -1,12 +1,13 @@
 import RPi.GPIO as GPIO
+from time import sleep
 
 class Sala():
     def __init__(self,sensor_presenca, 
     sensor_fumaca, 
     sensor_janela,
     sensor_porta, 
-    sensor_contagem_pessoas_entrada, 
-    sensor_contagem_pessoas_saida, 
+    sensorContagemPessoasEntrada, 
+    sensorContagemPessoasSaida, 
     sensor_temp,
     estadoLampada_1 = 0,
     estadoLampada_2 = 0,
@@ -17,8 +18,8 @@ class Sala():
     estado_sensor_fumaca = 0,
     estado_sensor_janela = 0,
     estado_sensor_porta = 0,
-    estado_sensor_contagem_pessoas_entrada = 0,
-    estado_sensor_contagem_pessoas_saida = 0,
+    estado_sensorContagemPessoasEntrada = 0,
+    estado_sensorContagemPessoasSaida = 0,
     estado_sensor_temp = 0,
     estadoAlarmeSala = 0):
 
@@ -26,8 +27,8 @@ class Sala():
         self.sensor_fumaca = sensor_fumaca
         self.sensor_janela = sensor_janela
         self.sensor_porta = sensor_porta
-        self.sensor_contagem_pessoas_entrada = sensor_contagem_pessoas_entrada
-        self.sensor_contagem_pessoas_saida = sensor_contagem_pessoas_saida
+        self.sensorContagemPessoasEntrada = sensorContagemPessoasEntrada
+        self.sensorContagemPessoasSaida = sensorContagemPessoasSaida
         self.sensor_temp = sensor_temp
         self.estadoLampada_1 = estadoLampada_1
         self.estadoLampada_2 = estadoLampada_2
@@ -38,8 +39,8 @@ class Sala():
         self.estado_sensor_fumaca = estado_sensor_fumaca
         self.estado_sensor_janela = estado_sensor_janela
         self.estado_sensor_porta = estado_sensor_porta
-        self.estado_sensor_contagem_pessoas_entrada = estado_sensor_contagem_pessoas_entrada
-        self.estado_sensor_contagem_pessoas_saida = estado_sensor_contagem_pessoas_saida
+        self.estado_sensorContagemPessoasEntrada = estado_sensorContagemPessoasEntrada
+        self.estado_sensorContagemPessoasSaida = estado_sensorContagemPessoasSaida
         self.estado_sensor_temp = estado_sensor_temp
         self.estadoAlarmeSala = estadoAlarmeSala
     
@@ -99,12 +100,22 @@ class Sala():
     def getEstadoAlarmeSala(self):
         return self.estadoAlarmeSala
         
+    def setEstadoSensorPessoasEntrada(self,estado):
+        if estado >=0:
+            self.estado_sensorContagemPessoasEntrada = estado
+        
+
     
-    def getEstadoTemperatura():
-        pass
+    def getEstadoSensorPessoasEntrada(self):
+        return self.estado_sensorContagemPessoasEntrada
     
-    def setEstadoTemperatura():
-        pass
+    def setEstadoSensorPessoasSaida(self,estado):
+        self.estado_sensorContagemPessoasSaida = estado
+    
+    def getEstadoSensorPessoasSaida(self):
+        return self.estado_sensorContagemPessoasSaida
+    
+    
     
     def estadosAparelhosON(self,pos):
         if(pos == 0):
@@ -144,26 +155,44 @@ class Sala():
             GPIO.output(led[pos], GPIO.LOW)
             self.estadosAparelhosOFF(pos)
     
+    def manipulaLedSala2(self,num,pos):
+        # sala_1 = ConfigJson('configuracao_sala1.json')
+
+        # print(sala_1.json['outputs'])
+
+        # 18 - lampada-1, 23 - lampada-2, 24 - ar_condicionado, 25_Alarme
+        led = [26,19,13,6,5]
+        if(num==1): 
+            GPIO.output(led[pos], GPIO.HIGH)
+            self.estadosAparelhosON(pos)
+        else:
+            GPIO.output(led[pos], GPIO.LOW)
+            self.estadosAparelhosOFF(pos)
     
     def temperatura(self,dhtDevice):
-        
-        for i in range (1):
-            try:
-                temperature_c = dhtDevice.temperature
+            for i in range(2):
+                try:
+                    temperature_c = dhtDevice.temperature
 
-                humidity = dhtDevice.humidity
-                print("---------- Climatização da Sala ---------- \n")
-                print(f"Temp: {temperature_c} C    Humidity: {humidity}% \n")
-                # time.sleep(2)
+                    humidity = dhtDevice.humidity
+                    print("---------- Climatização da Sala ---------- \n")
+                    print(f"Temp: {temperature_c} C    Humidity: {humidity}% \n")
+                    # time.sleep(2)
 
-            except RuntimeError as error:
-                print(error.args[0])
-                pass
+                except RuntimeError as error:
+                    print(error.args[0])
 
     def alarmeSala(self):
-        if (self.getEstadoAlarmeSala() == 0):
+        if (self.getEstadoAlarmeSala() == 0 and self.getEstadoSensorPresenca() == 1):
             print('\n----- Sensor Alarme da sala desligado ----\n')
-        else:
+            GPIO.output(18, GPIO.HIGH)
+            GPIO.output(23, GPIO.HIGH)
+            print('Ligou as lampadas!')
+            sleep(15)
+            GPIO.output(18, GPIO.LOW)
+            GPIO.output(23, GPIO.LOW)
+
+        elif(self.getEstadoAlarmeSala() == 1):
             print('Sensor Alarme da sala ligado')
             if(self.getEstadoSensorPresenca() == 1 or self.getEstadoSensorJanela() == 1 or self.getEstadoSensorPorta() == 1):
                 print('Detectado invasão na sala')
@@ -218,5 +247,28 @@ class Sala():
         else:
             self.setEstadoSensorPresenca(0)
             print('\nsensor de Presenca foi desativado')
+
+    def sensorEntradaPessoas(self,GPIO_IN):
+        self.setEstadoSensorPessoasEntrada(self.sensorContagemPessoasEntrada + 1)
+        print('Pessoa Entrando!')
+        # print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
+        # if self.getEstadoSensorPessoasEntrada() == 0:
+        #     self.setEstadoSensorPessoasEntrada(1)
+        #     print('\nsensor da entrada ativado')
+        # else:
+        #     self.setEstadoSensorPessoasEntrada(0)
+        #     print(self.getEstadoSensorPessoasEntrada())
+        #     print('\nsensor de entrada foi desativado')
+    
+    def sensorSaidaPessoas(self,GPIO_IN):
+        self.setEstadoSensorPessoasEntrada(self.sensorContagemPessoasEntrada - 1)
+        print('Pessoa Saindo!')
+        # print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
+        # if self.getEstadoSensorPessoasSaida() == 0:
+        #     self.setEstadoSensorPessoasSaida(1)
+        #     print('\nsensor da saida ativado')
+        # else:
+        #     self.setEstadoSensorPessoasSaida(0)
+        #     print('\nsensor de saida foi desativado')
 
     
