@@ -84,8 +84,12 @@ python3 server.py 164.41.98.16(endereço da placa)
 ```
 
 ```
-Dentro da Rasp em outro terminal:
-python3 Main.py 164.41.98.16(endereço da placa)
+Dentro da Rasp da sala 1 ou 3 em outro terminal:
+python3 mainConfig1.py 164.41.98.16(endereço da placa)
+```
+```
+Dentro da Rasp da sala 2 ou 4 em outro terminal:
+python3 mainConfig2.py 164.41.98.16(endereço da placa)
 ```
 
 ## Vídeo Apresentação
