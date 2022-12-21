@@ -44,11 +44,13 @@ O trabalho se encontra na pasta Trabalho_1, onde possui os arquivos para rodar o
 ### Servidor Distribuído
 **Sala.py**: Serve como uma classe Sala, onde passa os parâmetros da sala como leds e sensores e suas respectivas funções para manipulação de estado.
 
-**config.py**: Esse arquivo serve para fazer o parser do JSON da configuração da sala.
+**client.py**: Esse arquivo serve para fazer o parser do JSON da configuração da sala.
 
 **server.py**: Responsável pelo servidor distribuído, é uma classe onde envia e recebe dados do servidor central, criando um cliente para comunicação com o servidor central.
 
-**Main.py**: Arquivo principal, onde possui a lógica principal do projeto, onde o usuário controla todos os eletrônicos e sensores daquela sala.
+**mainConfig1.py**: Arquivo principal, onde possui a lógica principal do projeto, onde o usuário controla todos os eletrônicos e sensores daquela sala. (Salas 1 e 3)
+
+**mainConfig2.py**: Arquivo principal, onde possui a lógica principal do projeto, onde o usuário controla todos os eletrônicos e sensores daquela sala. (Salas 2 e 4)
 
 ## Como rodar o programa 
 A seguir tem os passos para rodar o programa:
