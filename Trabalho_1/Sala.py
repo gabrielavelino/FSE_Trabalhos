@@ -249,9 +249,10 @@ class Sala():
             print('\nsensor de Presenca foi desativado')
 
     def sensorEntradaPessoas(self,GPIO_IN):
-        self.setEstadoSensorPessoasEntrada(self.sensorContagemPessoasEntrada + 1)
+
+        self.setEstadoSensorPessoasEntrada(self.estado_sensorContagemPessoasEntrada + 1)
         print('Pessoa Entrando!')
-        # print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
+        print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
         # if self.getEstadoSensorPessoasEntrada() == 0:
         #     self.setEstadoSensorPessoasEntrada(1)
         #     print('\nsensor da entrada ativado')
@@ -261,9 +262,9 @@ class Sala():
         #     print('\nsensor de entrada foi desativado')
     
     def sensorSaidaPessoas(self,GPIO_IN):
-        self.setEstadoSensorPessoasEntrada(self.sensorContagemPessoasEntrada - 1)
+        self.setEstadoSensorPessoasEntrada(self.estado_sensorContagemPessoasEntrada - 1)
         print('Pessoa Saindo!')
-        # print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
+        print('Número de pessoa na sala: ', self.getEstadoSensorPessoasEntrada())
         # if self.getEstadoSensorPessoasSaida() == 0:
         #     self.setEstadoSensorPessoasSaida(1)
         #     print('\nsensor da saida ativado')

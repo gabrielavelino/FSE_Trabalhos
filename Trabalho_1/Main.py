@@ -30,8 +30,8 @@ GPIO.add_event_detect(sala1.sensor_fumaca, GPIO.BOTH, callback=sala1.sensorFumac
 GPIO.add_event_detect(sala1.sensor_janela, GPIO.BOTH, callback=sala1.sensorJanela,bouncetime = 300)
 GPIO.add_event_detect(sala1.sensor_porta, GPIO.BOTH, callback=sala1.sensorPorta,bouncetime = 300)
 GPIO.add_event_detect(sala1.sensor_presenca, GPIO.BOTH, callback=sala1.sensorPresenca,bouncetime = 300)
-GPIO.add_event_detect(sala1.sensorContagemPessoasEntrada, GPIO.RISING, callback=sala1.sensorEntradaPessoas,bouncetime = 300)
-GPIO.add_event_detect(sala1.sensorContagemPessoasSaida, GPIO.RISING, callback=sala1.sensorSaidaPessoas,bouncetime = 300)
+GPIO.add_event_detect(sala1.sensorContagemPessoasEntrada, GPIO.RISING, callback=sala1.sensorEntradaPessoas,bouncetime = 200)
+GPIO.add_event_detect(sala1.sensorContagemPessoasSaida, GPIO.RISING, callback=sala1.sensorSaidaPessoas,bouncetime = 200)
 
 
 

@@ -105,7 +105,7 @@ def main():
         alarmeSala = threading.Thread(sala2.alarmeSala())
         alarmeSala.start()
         # sala2.alarmeSala()
-        # sala2.temperatura(dhtDevice) #only 2 secs
+        sala2.temperatura(dhtDevice) #only 2 secs
         # Menu = threading.Thread(target=menu())
         # Menu.run()
         menu()

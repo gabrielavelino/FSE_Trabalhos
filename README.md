@@ -90,4 +90,4 @@ python3 Main.py 164.41.98.16(endereço da placa)
 
 ## Informações adicionais
 
-Não foi implementado o sensor de contagem de pessoas, o arquivo log dos comandos do usuário, inicializar a sala com JSON e alguns problemas de lógica com o alarme.
+Não foi implementado o arquivo log dos comandos do usuário, inicializar a sala com JSON e alguns problemas de lógica com o servidor e cliente.

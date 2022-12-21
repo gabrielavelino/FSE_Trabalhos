@@ -37,8 +37,10 @@ while True:
     if (opcao == 1):
         
         conn.sendall(str.encode('1'))
+        connSala2.sendall(str.encode('1'))
         try:
             print(conn.recv(1024).decode())
+            print(connSala2.recv(1024).decode())
         except socket.timeout:
             print('Nao foi dessa vez')
             continue
