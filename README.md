@@ -88,6 +88,10 @@ Dentro da Rasp em outro terminal:
 python3 Main.py 164.41.98.16(endereço da placa)
 ```
 
+## Vídeo Apresentação
+Segue o link do vídeo de apresentação:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tr4_Ur7tzSY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Informações adicionais
 
 Não foi implementado o arquivo log dos comandos do usuário, inicializar a sala com JSON e alguns problemas de lógica com o servidor e cliente.

@@ -170,13 +170,11 @@ class Sala():
             self.estadosAparelhosOFF(pos)
     
     def temperatura(self,dhtDevice):
-            for i in range(2):
                 try:
-                    temperature_c = dhtDevice.temperature
-
-                    humidity = dhtDevice.humidity
+                    temperature = dhtDevice.temperature
+                    humidade = dhtDevice.humidade
                     print("---------- Climatização da Sala ---------- \n")
-                    print(f"Temp: {temperature_c} C    Humidity: {humidity}% \n")
+                    print(f"Temp: {temperature} C    humidade: {humidade}% \n")
                     # time.sleep(2)
 
                 except RuntimeError as error:
